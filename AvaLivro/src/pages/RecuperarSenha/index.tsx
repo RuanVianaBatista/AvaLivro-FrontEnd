@@ -1,49 +1,101 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import {
+  Form,
+  RecoverCard,
+  RecoverScreen,
+  SecondaryButton,
+  SubmitButton,
+  SuccessMessage,
+} from './styles'
 
 type RecoverPasswordPageProps = {
   onBack: () => void
 }
 
 export default function RecoverPasswordPage({ onBack }: RecoverPasswordPageProps) {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [registered, setRegistered] = useState(false)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (email.trim()) {
-      setSent(true)
+    const hasValidFields =
+      name.trim() && email.trim() && password.trim() && confirmPassword.trim()
+
+    if (!hasValidFields) {
+      alert('Preencha todos os campos')
+      return
     }
+
+    if (password !== confirmPassword) {
+      alert('As senhas nao coincidem')
+      return
+    }
+
+    setRegistered(true)
   }
 
   return (
-    <div className="screen recover-screen">
-      <div className="card">
-        <h1>Recuperar senha</h1>
-        <p>Informe seu e-mail para receber o link de recuperação.</p>
+    <RecoverScreen>
+      <RecoverCard>
+        <h1>Cadastro</h1>
+        
 
-        {!sent ? (
-          <form onSubmit={handleSubmit}>
+        {!registered ? (
+          <Form onSubmit={handleSubmit}>
             <label>
-              E-mail
+              
+              <input
+                type="text"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Seu nome"
+              />
+            </label>
+
+            <label>
+              
               <input
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="seu@email.com"
+                placeholder="@email.com"
               />
             </label>
 
-            <button type="submit">Enviar</button>
-          </form>
+            <label>
+              
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Crie uma senha"
+              />
+            </label>
+
+            <label>
+              
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                placeholder="Repita sua senha"
+              />
+            </label>
+
+            <SubmitButton type="submit">Cadastrar</SubmitButton>
+          </Form>
         ) : (
-          <p className="success-message">Link enviado! Verifique seu e-mail.</p>
+          <SuccessMessage>Conta criada com sucesso!</SuccessMessage>
         )}
 
-        <button type="button" className="secondary" onClick={onBack}>
+        <SecondaryButton type="button" onClick={onBack}>
           Voltar
-        </button>
-      </div>
-    </div>
+        </SecondaryButton>
+      </RecoverCard>
+    </RecoverScreen>
   )
 }

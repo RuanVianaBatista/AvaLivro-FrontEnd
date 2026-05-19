@@ -1,5 +1,18 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import {
+  BookAuthor,
+  BookItem,
+  BookList,
+  BookTitle,
+  EmptyState,
+  ResultsSection,
+  SearchButton,
+  SearchCard,
+  SearchForm,
+  SearchScreen,
+  SecondaryButton,
+} from './styles'
 
 type Book = {
   id: number
@@ -43,46 +56,44 @@ export default function SearchBooksPage({ onBack }: SearchBooksPageProps) {
   }
 
   return (
-    <div className="screen search-screen">
-      <div className="card">
+    <SearchScreen>
+      <SearchCard>
         <h1>Pesquisar livros</h1>
-        <p>Digite o nome do livro ou autor e clique em pesquisar.</p>
 
-        <form onSubmit={handleSearch} className="search-form">
+        <SearchForm onSubmit={handleSearch}>
           <label>
-            Buscar livro
             <input
               type="text"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Pesquisar..."
+              placeholder="Ex: Drac..."
             />
           </label>
 
-          <button type="submit">Pesquisar</button>
-        </form>
+          <SearchButton type="submit">Pesquisar</SearchButton>
+        </SearchForm>
 
         {searched && (
-          <div className="results-section">
+          <ResultsSection>
             {results.length > 0 ? (
-              <ul className="book-list">
+              <BookList>
                 {results.map((book) => (
-                  <li key={book.id} className="book-item">
-                    <p className="book-title">{book.title}</p>
-                    <p className="book-author">{book.author}</p>
-                  </li>
+                  <BookItem key={book.id}>
+                    <BookTitle>{book.title}</BookTitle>
+                    <BookAuthor>{book.author}</BookAuthor>
+                  </BookItem>
                 ))}
-              </ul>
+              </BookList>
             ) : (
-              <p className="empty-state">Nenhum livro encontrado.</p>
+              <EmptyState>Nenhum livro encontrado.</EmptyState>
             )}
-          </div>
+          </ResultsSection>
         )}
 
-        <button type="button" className="secondary" onClick={onBack}>
+        <SecondaryButton type="button" onClick={onBack}>
           Voltar
-        </button>
-      </div>
-    </div>
+        </SecondaryButton>
+      </SearchCard>
+    </SearchScreen>
   )
 }
